@@ -3,4 +3,4 @@ imageTag: "latest"
 imagePullPolicy: "Always"
 
 jobSchedule: "*/1 * * * *"
-coreDeploymentName: foo
+coreDeploymentName: NULL #must be specified
