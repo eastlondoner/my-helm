@@ -1,0 +1,17 @@
+name: my-helm
+
+# The volumeClaimTemplates will provide stable storage using
+# PersistentVolumes provisioned by a PersistentVolume Provisioner.
+volumeClaimTemplates:
+ storageClassName: standard
+ accessModes: ReadWriteOnce
+ storage: 10Gi
+
+# Specs for the Neo4j docker image
+image: "mendhak/http-https-echo"
+imageTag: "19"
+imagePullPolicy: "Always"
+
+service:
+  httpPort: 8080
+  httpsPort: 8443

@@ -1,0 +1,4 @@
+apiVersion: v2                              
+name: eastlondoner-dependency-1
+version: 1.0.0
+description: An optonal dependent component of my distributed application

@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-core
+spec:
+  serviceName: {{ .Release.Name }}-core
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: my-helm
+      app.kubernetes.io/component: core
+      app.kubernetes.io/release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        app.kubernetes.io/name: my-helm
+        app.kubernetes.io/component: core
+        app.kubernetes.io/release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: core
+        image: "{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: "{{ .Values.imagePullPolicy }}"
+        env:
+          - name: HTTP_PORT
+            value: {{ .Values.service.httpPort | quote }}
+          - name: HTTPS_PORT
+            value: {{ .Values.service.httpsPort | quote }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.service.httpPort }}
+            protocol: TCP
+          - name: https
+            containerPort: {{ .Values.service.httpsPort }}
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+            initialDelaySeconds: 5
+            periodSeconds: 60
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+            initialDelaySeconds: 5
+            periodSeconds: 60
+        volumeMounts:
+          - name: "{{ .Release.Name }}-data"
+            mountPath: "/data"
+  volumeClaimTemplates:
+    - metadata:
+        name: "{{ .Release.Name }}-data"
+      spec:
+        storageClassName: "{{ .Values.volumeClaimTemplates.storageClassName }}"
+        accessModes: [ "{{ .Values.volumeClaimTemplates.accessModes }}" ]
+        resources:
+          requests:
+            storage: {{ .Values.volumeClaimTemplates.storage }}

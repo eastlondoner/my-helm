@@ -1,0 +1,6 @@
+image: "curlimages/curl"
+imageTag: "latest"
+imagePullPolicy: "Always"
+
+jobSchedule: "*/1 * * * *"
+coreDeploymentName: foo
