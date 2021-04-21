@@ -1,3 +1,6 @@
+{{- if empty ( lookup "v1" "Service" .Release.Namespace ( print .Values.coreDeploymentName "-svc" ) ) }}
+  {{- print "Unable to find core deployment " .Values.coreDeploymentName | fail }}
+{{- end }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
